@@ -196,6 +196,11 @@ class TrainSftArgs(BaseConfigModel):
         None, description="DeepSpeed configuration file path for multi-GPU training"
     )
     do_train: bool = Field(True)
+    val_size: float = Field(0.0, description="验证集比例，0表示不使用")
+    eval_strategy: str = Field("no", description="评估策略: 'no', 'steps', 'epoch'")
+    eval_steps: Optional[int] = Field(None, description="每N步评估一次，eval_strategy='steps'时生效")
+    load_best_model_at_end: bool = Field(False, description="训练结束时加载最优模型，early stopping必须为True")
+    early_stopping_steps: Optional[int] = Field(None, description="连续N步无提升则停止训练")
 
 
 class InferArgs(BaseConfigModel):

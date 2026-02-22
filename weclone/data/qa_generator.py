@@ -79,11 +79,11 @@ class DataProcessor:
                 is_single_chat=False,
             )
 
-        # PII detection
-        if self.config.language == LanguageType.ZH:
-            self.pii_detector = ChinesePIIDetector()
-        else:
-            self.pii_detector = PIIDetector(language=self.config.language)
+        # # PII detection
+        # if self.config.language == LanguageType.ZH:
+        #     self.pii_detector = ChinesePIIDetector()
+        # else:
+        #     self.pii_detector = PIIDetector(language=self.config.language)
 
         # dataset cleaning
         clean_dataset_config = self.config.clean_dataset
@@ -629,19 +629,19 @@ class DataProcessor:
 
         # TODO Deleting directly by batch_has_pii returning true/false.
         indices_to_drop = []
-        if text_messages:
-            pii_results = self.pii_detector.batch_has_pii(text_messages)
+        # if text_messages:
+        #     pii_results = self.pii_detector.batch_has_pii(text_messages)
 
-            for idx, (df_index, msg_str, has_pii) in enumerate(zip(text_indices, text_messages, pii_results)):
-                if has_pii:
-                    indices_to_drop.append(df_index)
-                    continue
+        #     for idx, (df_index, msg_str, has_pii) in enumerate(zip(text_indices, text_messages, pii_results)):
+        #         if has_pii:
+        #             indices_to_drop.append(df_index)
+        #             continue
 
-                # Check blocked words
-                for blocked_word in self.blocked_words:
-                    if blocked_word in msg_str:
-                        indices_to_drop.append(df_index)
-                        break
+        #         # Check blocked words
+        #         for blocked_word in self.blocked_words:
+        #             if blocked_word in msg_str:
+        #                 indices_to_drop.append(df_index)
+        #                 break
 
         df = df.drop(index=indices_to_drop)
 

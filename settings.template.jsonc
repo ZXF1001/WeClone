@@ -1,9 +1,9 @@
 {
-    "version": "0.3.01",
+    "version": "0.3.03",
     "common_args": {
-        "model_name_or_path": "./models/Qwen2.5-7B-Instruct",
+        "model_name_or_path": "/autodl-fs/data/models/Qwen3-32B",
         "adapter_name_or_path": "./model_output", //同时做为train_sft_args的output_dir
-        "template": "qwen",
+        "template": "qwen3",
         "default_system": "请你扮演一名人类，不要说自己是人工智能",
         "media_dir": "dataset/media",
         "finetuning_type": "lora",
@@ -25,9 +25,8 @@
             "text"
         ],
         "blocked_words": [ // 禁用词
-            "例如 姓名",
-            "例如 密码",
-            "//....."
+            // "例如 密码",
+            // "//....."
         ],
         "add_time": false,
         "add_relation": false,
@@ -38,7 +37,7 @@
         "combine_msg_max_length": 2048, // 组合后消息最大长度 配合cutoff_len 使用
         "messages_max_length": 2048, // messages最长字符数量 配合cutoff_len 使用
         "clean_dataset": {
-            "enable_clean": false,
+            "enable_clean": true,
             "clean_strategy": "llm",
             "llm": {
                 "accept_score": 2, //可以接受的llm打分阈值,1分最差，5分最好,低于此分数的数据不会用于训练
@@ -46,9 +45,9 @@
             }
         },
         "online_llm_clear": false,
-        "base_url": "https://xxx/v1",
-        "llm_api_key": "xxxxx",
-        "model_name": "xxx", //建议使用参数较大的模型，例如DeepSeek-V3
+        "base_url": "https://api.deepseek.com/v1",
+        "llm_api_key": "sk-xxx",
+        "model_name": "deepseek-reasoner", //建议使用参数较大的模型，例如DeepSeek-V3
         "clean_batch_size": 50,
         "vision_api": {
             "enable": false, // 设置为 true 来开启此功能
@@ -64,12 +63,13 @@
         "dataset": "chat-sft",
         "dataset_dir": "./dataset/res_csv/sft",
         "use_fast_tokenizer": true,
-        "lora_target": "q_proj,v_proj",
-        "lora_rank": 8,
-        "lora_dropout": 0.25,
-        "weight_decay": 0.1,
+        "lora_target": "q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj",
+        "lora_rank": 64,
+        "lora_alpha": 128,
+        "lora_dropout": 0.1,
+        "weight_decay": 0.01,
         "overwrite_cache": true,
-        "per_device_train_batch_size": 2,
+        "per_device_train_batch_size": 1,
         "gradient_accumulation_steps": 16,
         "lr_scheduler_type": "cosine",
         "cutoff_len": 2048,
@@ -77,17 +77,23 @@
         "save_steps": 100,
         "learning_rate": 1e-4,
         "warmup_ratio": 0.1,
-        "num_train_epochs": 2,
+        "num_train_epochs": 4,
+        "val_size": 0.1,                    // 10%数据作为验证集
+        "per_device_eval_batch_size": 1,
+        "eval_strategy": "steps",
+        "eval_steps": 100,
+        "early_stopping_steps": 400,
+        "load_best_model_at_end": true,
         "plot_loss": true,
         "fp16": true,
-        "flash_attn": "fa2",
+        "flash_attn": "sdpa",
         // "deepspeed": "ds_config.json" //多卡训练
     },
     "infer_args": {
         "repetition_penalty": 1.2,
-        "temperature": 0.5,
-        "max_length": 256,
-        "top_p": 0.65
+        "temperature": 0.7,
+        "max_length": 2048,
+        "top_p": 0.8
     },
     "vllm_args": {
         "gpu_memory_utilization": 0.9,
