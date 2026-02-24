@@ -34,8 +34,8 @@
         "qa_match_strategy": "time_window", // 组成qa策略
         "single_combine_time_window": 2, // 单人组成单句时间窗口（分钟）,
         "qa_match_time_window": 5, // 组成qa时间窗口（分钟）,
-        "combine_msg_max_length": 2048, // 组合后消息最大长度 配合cutoff_len 使用
-        "messages_max_length": 2048, // messages最长字符数量 配合cutoff_len 使用
+        "combine_msg_max_length": 4096, // 组合后消息最大长度 配合cutoff_len 使用
+        "messages_max_length": 4096, // messages最长字符数量 配合cutoff_len 使用
         "clean_dataset": {
             "enable_clean": true,
             "clean_strategy": "llm",
@@ -72,7 +72,7 @@
         "per_device_train_batch_size": 1,
         "gradient_accumulation_steps": 16,
         "lr_scheduler_type": "cosine",
-        "cutoff_len": 2048,
+        "cutoff_len": 4096,
         "logging_steps": 10,
         "save_steps": 100,
         "learning_rate": 1e-4,
@@ -92,7 +92,7 @@
     "infer_args": {
         "repetition_penalty": 1.2,
         "temperature": 0.7,
-        "max_length": 2048,
+        "max_length": 4096,
         "top_p": 0.8
     },
     "vllm_args": {
